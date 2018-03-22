@@ -1,8 +1,6 @@
 package main
 
 import (
-	"flag"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -10,13 +8,23 @@ import (
 	"github.com/desmondrawls/rock-paper-scissors/web_ui"
 )
 
-func main() {
-	var port string
-	flag.StringVar(&port, "port", "8080", "port to listen on")
-	flag.Parse()
+func getEnvVarOrDefault(envVar string, defaultValue string) string {
+	val := os.Getenv(envVar)
+	if val != "" {
+		return val
+	}
+	return defaultValue
+}
 
+func getListenAddress() string {
+	ip := getEnvVarOrDefault("LISTEN_IP", "0.0.0.0")
+	port := getEnvVarOrDefault("PORT", "8080")
+	return ip + ":" + port
+}
+
+func main() {
 	handler := &web_ui.Handler{}
-	url := fmt.Sprintf("127.0.0.1:%s", port)
-	fmt.Fprintf(os.Stderr, "Server: http://%s\n", url)
-	log.Fatal(http.ListenAndServe(url, handler))
+	listenAddr := getListenAddress()
+	log.Printf("server listening on http://%s\n", listenAddr)
+	log.Fatal(http.ListenAndServe(listenAddr, handler))
 }

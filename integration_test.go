@@ -34,7 +34,8 @@ var _ = Describe("Integration", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		serverPort := fmt.Sprintf("%d", PickAPort())
-		serverCmd := exec.Command(pathToServer, "--port", serverPort)
+		serverCmd := exec.Command(pathToServer)
+		serverCmd.Env = []string{"PORT=" + serverPort, "LISTEN_IP=127.0.0.1"}
 		serverSession, err = gexec.Start(serverCmd, GinkgoWriter, GinkgoWriter)
 		Expect(err).NotTo(HaveOccurred())
 		baseURL = fmt.Sprintf("http://127.0.0.1:%s", serverPort)

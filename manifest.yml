@@ -1,0 +1,10 @@
+---
+applications:
+- name: rps
+  instances: 3
+  memory: 32M
+  disk_quota: 32M
+  buildpack: go_buildpack
+  env:
+    GOVERSION: go1
+    GOPACKAGENAME: github.com/desmondrawls/rock-paper-scissors
