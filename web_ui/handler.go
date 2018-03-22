@@ -7,38 +7,11 @@ import (
 	"github.com/desmondrawls/rock-paper-scissors/play"
 )
 
-const (
-	HomePageText = `<body>
-        <form action="/play" method="POST">
-        <label for:"player1">P1</label>
-        <input name="player1" type="string"/>
-        <br>
-        <label for:"player2">P2</label>
-        <input name="player2" type="string"/>
-        <br>
-        <input type="submit" value="Play" />
-        </form>
-        </body>`
-
-	InvalidInputPageTemplate = `<body>
-        <h1>Invalid input</h1>
-        <form action="/play" method="POST">
-        <label for:"player1">P1</label>
-        <input name="player1" type="string" value=%q/>
-        <br>
-        <label for:"player2">P2</label>
-        <input name="player2" type="string" value=%q/>
-        <br>
-        <input type="submit" value="Play" />
-        </form>
-        </body>`
-)
-
 type Handler struct{}
 
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
-		w.Write([]byte(HomePageText))
+		renderPage(w, pageFields{Header: "Record a game"})
 		return
 	}
 	if r.URL.Path == "/play" && r.Method == "POST" {
@@ -67,5 +40,9 @@ func (w web_ui) Draw() {
 }
 
 func (w web_ui) Invalid(throws play.Inputs) {
-	w.Write([]byte(fmt.Sprintf(InvalidInputPageTemplate, throws.Player1Throw, throws.Player2Throw)))
+	renderPage(w, pageFields{
+		Header:       "Invalid input",
+		Player1Value: throws.Player1Throw,
+		Player2Value: throws.Player2Throw,
+	})
 }
