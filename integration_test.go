@@ -64,6 +64,10 @@ var _ = Describe("Integration", func() {
 		assertJourney("rock", "scissors", "player1 .* WINS")
 	})
 
+	It("should handle tie games", func() {
+		assertJourney("paper", "paper", "TIE")
+	})
+
 	It("should validate input", func() {
 		assertJourney("rock", "sailboat", "Invalid input")
 	})
